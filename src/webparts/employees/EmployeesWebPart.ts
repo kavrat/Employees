@@ -11,11 +11,20 @@ import * as strings from 'EmployeesWebPartStrings';
 import Employees from './components/Employees';
 import { IEmployeesProps } from './components/IEmployeesProps';
 
+import { sp } from '@pnp/sp';
+
 export interface IEmployeesWebPartProps {
   description: string;
 }
 
 export default class EmployeesWebPart extends BaseClientSideWebPart <IEmployeesWebPartProps> {
+  public onInit(): Promise<void>{
+    return super.onInit().then(_=> {
+      sp.setup({
+        spfxContext: this.context
+      });
+    });
+  }
 
   public render(): void {
     const element: React.ReactElement<IEmployeesProps> = React.createElement(
