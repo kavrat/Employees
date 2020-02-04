@@ -4,7 +4,7 @@ import { IEmployeesProps } from './IEmployeesProps';
 import { IEmployeesState} from './IEmployeesState';
 import { escape } from '@microsoft/sp-lodash-subset';
 
-import { Nav} from 'office-ui-fabric-react/lib/Nav';
+import { Nav, INavLinkGroup, INavLink} from 'office-ui-fabric-react/lib/Nav';
 import { sp } from '@pnp/pnpjs';
 import { IDepartment } from './models/IDepartment';
 import { getItemClassNames } from 'office-ui-fabric-react/lib/components/ContextualMenu/ContextualMenu.classNames';
@@ -14,34 +14,53 @@ export default class Employees extends React.Component<IEmployeesProps, IEmploye
   constructor(props: any) {
     super(props);
     this.state = {
-      items: []
+      groups: []
     };
   }
 
+  private _fillGroups(departments: IDepartment[]): INavLinkGroup[] {
+    var newGroup: INavLinkGroup[] = [];
+    var sampleLink1: INavLink[] = [
+      {name: 'sample 1', url: '~'},
+      {name: 'sample 2', url: '~'},
+      {name: 'sample 3', url: '~'}
+    ];
+    departments.forEach((value)=> {
+      console.log(value.Title);
+      var item: INavLinkGroup = {
+        name: value.Title,
+        links: sampleLink1
+      };
+      newGroup.push(item);
+    });
+    return newGroup;
+  }
   public componentDidMount(): void {
-    sp.web.lists.getByTitle('Departments').items.select('ID', 'Title', 'HeadOfDepartment/Title').expand('HeadOfDepartment/Title').get().then((result: IDepartment[]) => {
-      this.setState({
-        items: result
-      });
+    sp.web.lists.getByTitle('Departments').items.select('ID', 'Title').get().then((result: IDepartment[]) => {
       result.forEach((value) => {
-        console.log(value.HeadOfDepartment);
+        console.log(value.Title);
       });
+      this.setState({
+        groups: this._fillGroups(result)
+      });
+
     });
   }
 
   public render(): React.ReactElement<IEmployeesProps> {
-    if(!this.state.items) {
+    if(!this.state.groups) {
       return (<div>Items not loaded</div>);
     }
 
-    const deps = this.state.items.map((item, key) => 
-  <li key={item.ID}>{item.Title}, {item.HeadOfDepartment.Title}</li>
-      );
+  //   const deps = this.state.items.map((item, key) => 
+  // <li key={item.ID}>{item.Title}, {item.HeadOfDepartment.Title}</li>
+  //     );
     return (
       <div>
-        <ul>
-          {deps}
-        </ul>
+        <Nav
+          ariaLabel='Departments'
+          groups={this.state.groups}
+        />
       </div>
       // <div className={ styles.employees }>
       //   <div className={ styles.container }>

@@ -1,5 +1,5 @@
-import { IDepartment } from './models/IDepartment';
+import { INavLinkGroup } from 'office-ui-fabric-react/lib/Nav';
 
 export interface IEmployeesState {
-    items: IDepartment[];
+    groups: INavLinkGroup[];
 }
