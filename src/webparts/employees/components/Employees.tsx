@@ -5,7 +5,9 @@ import { IEmployeesState} from './IEmployeesState';
 import { escape } from '@microsoft/sp-lodash-subset';
 
 import { Nav} from 'office-ui-fabric-react/lib/Nav';
-import { sp } from '@pnp/sp';
+import { sp } from '@pnp/pnpjs';
+import { IDepartment } from './models/IDepartment';
+import { getItemClassNames } from 'office-ui-fabric-react/lib/components/ContextualMenu/ContextualMenu.classNames';
 
 export default class Employees extends React.Component<IEmployeesProps, IEmployeesState> {
 
@@ -17,12 +19,30 @@ export default class Employees extends React.Component<IEmployeesProps, IEmploye
   }
 
   public componentDidMount(): void {
-    
+    sp.web.lists.getByTitle('Departments').items.select('ID', 'Title', 'HeadOfDepartment/Title').expand('HeadOfDepartment/Title').get().then((result: IDepartment[]) => {
+      this.setState({
+        items: result
+      });
+      result.forEach((value) => {
+        console.log(value.HeadOfDepartment);
+      });
+    });
   }
 
   public render(): React.ReactElement<IEmployeesProps> {
+    if(!this.state.items) {
+      return (<div>Items not loaded</div>);
+    }
+
+    const deps = this.state.items.map((item, key) => 
+  <li key={item.ID}>{item.Title}, {item.HeadOfDepartment.Title}</li>
+      );
     return (
-      <label>this.state.items.length</label>
+      <div>
+        <ul>
+          {deps}
+        </ul>
+      </div>
       // <div className={ styles.employees }>
       //   <div className={ styles.container }>
       //     <div className={ styles.row }>

@@ -11,7 +11,7 @@ import * as strings from 'EmployeesWebPartStrings';
 import Employees from './components/Employees';
 import { IEmployeesProps } from './components/IEmployeesProps';
 
-import { sp } from '@pnp/sp';
+import { sp } from '@pnp/pnpjs';
 
 export interface IEmployeesWebPartProps {
   description: string;

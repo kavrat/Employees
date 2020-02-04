@@ -1,7 +1,8 @@
 import { IEmployee } from "./IEmployee";
 
 export interface IDepartment {
+    ID: number;
     Title: string;
-    HeadOfDepartment: string;
-    Employees: IEmployee[];
+    HeadOfDepartment: any;
+    //Employees: IEmployee[];
 }
