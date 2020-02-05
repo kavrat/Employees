@@ -4,7 +4,7 @@ export interface IEmployee {
     FullName: string;
     Email: string;
     JobTitle: string;
-    Department: string;
+    Department: any;
     WorkPhone: string;
     CellPhone: string;
     WorkAddress: string;
