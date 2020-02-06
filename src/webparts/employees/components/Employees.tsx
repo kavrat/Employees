@@ -9,7 +9,6 @@ import { sp } from '@pnp/pnpjs';
 import { IDepartment } from './models/IDepartment';
 import { getItemClassNames } from 'office-ui-fabric-react/lib/components/ContextualMenu/ContextualMenu.classNames';
 import { IEmployee } from './models/IEmployee';
-import { IItemLink } from './models/IItemLink';
 
 export default class Employees extends React.Component<IEmployeesProps, IEmployeesState> {
 
@@ -40,7 +39,8 @@ export default class Employees extends React.Component<IEmployeesProps, IEmploye
       });
       let item: INavLinkGroup ={
         name: department.Title,
-        links: employeelinks
+        links: employeelinks,
+        collapseByDefault: true
       };
       employeelinks = [];
       newGroup.push(item);
@@ -102,6 +102,15 @@ export default class Employees extends React.Component<IEmployeesProps, IEmploye
             <Nav
               ariaLabel='Departments'
               groups={this.state.navGroups}
+              styles={{
+                root: {
+                  width: 208,
+                  height: 500,
+                  boxSizing: 'border-box',
+                  border: '1px solid #eee',
+                  overflowY: 'auto'
+                }
+              }}
             />
           </div>
           <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg8">B</div>
