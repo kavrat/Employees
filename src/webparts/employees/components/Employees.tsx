@@ -30,7 +30,7 @@ export default class Employees extends React.Component<IEmployeesProps, IEmploye
         if(employee.Department.Title.toString() == department.Title.toString()) {
           var tempLink: INavLink = {
             name: employee.Title,
-            url: '~'
+            url: null
           };
           employeelinks.push(tempLink);
           console.log(employee.Department.Title);
