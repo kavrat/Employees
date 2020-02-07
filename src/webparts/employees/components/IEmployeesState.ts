@@ -5,4 +5,6 @@ import { IEmployee } from './models/IEmployee';
 
 export interface IEmployeesState {
     navGroups: INavLinkGroup[];
+    showDetails: boolean;
+    employee: IEmployee;
 }

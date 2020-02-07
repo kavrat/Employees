@@ -4,11 +4,13 @@ import { IEmployeesProps } from './IEmployeesProps';
 import { IEmployeesState} from './IEmployeesState';
 import { escape } from '@microsoft/sp-lodash-subset';
 
+import { Label } from 'office-ui-fabric-react/lib/Label';
 import { Nav, INavLinkGroup, INavLink} from 'office-ui-fabric-react/lib/Nav';
 import { sp } from '@pnp/pnpjs';
 import { IDepartment } from './models/IDepartment';
 import { getItemClassNames } from 'office-ui-fabric-react/lib/components/ContextualMenu/ContextualMenu.classNames';
 import { IEmployee } from './models/IEmployee';
+import { getChildren } from 'office-ui-fabric-react/lib/Utilities';
 
 export default class Employees extends React.Component<IEmployeesProps, IEmployeesState> {
 
@@ -16,10 +18,31 @@ export default class Employees extends React.Component<IEmployeesProps, IEmploye
     super(props);
     this.state = {
       navGroups: [],
+      showDetails: false,
+      employee: null
 
     };
+    this.getData = this.getData.bind(this);
+    //this.handleClick = this.handleClick.bind(this);
   }
   
+  private handleClick(item: IEmployee) {
+    this.setState({
+      showDetails: !this.state.showDetails,
+      employee: item
+    });
+  }
+
+  private getData() {
+    if(this.state.showDetails) {
+    return <Label>{this.state.employee.Title}</Label>;
+    }
+    else {
+      return <Label>{this.state.showDetails}</Label>;
+    }
+  }
+
+
   private _fillOrgStructure(departments: IDepartment[], employees: IEmployee[]): INavLinkGroup[] {
     let newGroup: INavLinkGroup[] = [];
     let employeelinks: INavLink[] = [];
@@ -30,11 +53,12 @@ export default class Employees extends React.Component<IEmployeesProps, IEmploye
         if(employee.Department.Title.toString() == department.Title.toString()) {
           var tempLink: INavLink = {
             name: employee.Title,
-            url: null
+            url: null,
+            onClick: () => {
+              this.handleClick(employee);
+            }
           };
           employeelinks.push(tempLink);
-          console.log(employee.Department.Title);
-          console.log(employee.Title);
         }
       });
       let item: INavLinkGroup ={
@@ -49,23 +73,6 @@ export default class Employees extends React.Component<IEmployeesProps, IEmploye
     return newGroup;
   }
 
-  // private _fillGroups(departments: IDepartment[]): INavLinkGroup[] {
-  //   var newGroup: INavLinkGroup[] = [];
-  //   var sampleLink1: INavLink[] = [
-  //     {name: 'sample 1', url: '~'},
-  //     {name: 'sample 2', url: '~'},
-  //     {name: 'sample 3', url: '~'}
-  //   ];
-  //   departments.forEach((value)=> {
-  //     console.log(value.Title);
-  //     var item: INavLinkGroup = {
-  //       name: value.Title,
-  //       links: sampleLink1
-  //     };
-  //     newGroup.push(item);
-  //   });
-  //   return newGroup;
-  // }
   public componentDidMount(): void {
     //get Departments
     sp.web.lists.getByTitle('Departments').items.select('ID', 'Title').get().then((deps: IDepartment[]) => {
@@ -113,24 +120,9 @@ export default class Employees extends React.Component<IEmployeesProps, IEmploye
               }}
             />
           </div>
-          <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg8">B</div>
+            <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg8"><this.getData></this.getData></div>
         </div>
-
       </div>
-      // <div className={ styles.employees }>
-      //   <div className={ styles.container }>
-      //     <div className={ styles.row }>
-      //       <div className={ styles.column }>
-      //         <span className={ styles.title }>Welcome to SharePoint!</span>
-      //         <p className={ styles.subTitle }>Customize SharePoint experiences using Web Parts.</p>
-      //         <p className={ styles.description }>{escape(this.props.description)}</p>
-      //         <a href="https://aka.ms/spfx" className={ styles.button }>
-      //           <span className={ styles.label }>Learn more</span>
-      //         </a>
-      //       </div>
-      //     </div>
-      //   </div>
-      // </div>
     );
   }
 }
