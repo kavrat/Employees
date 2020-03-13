@@ -28,7 +28,7 @@ export default class Employees extends React.Component<IEmployeesProps, IEmploye
   
   private handleClick(item: IEmployee) {
     this.setState({
-      showDetails: !this.state.showDetails,
+      showDetails: true,
       employee: item
     });
   }
@@ -53,10 +53,11 @@ export default class Employees extends React.Component<IEmployeesProps, IEmploye
         if(employee.Department.Title.toString() == department.Title.toString()) {
           var tempLink: INavLink = {
             name: employee.Title,
-            url: null,
+            url: '',
             onClick: () => {
               this.handleClick(employee);
-            }
+            },
+            
           };
           employeelinks.push(tempLink);
         }
